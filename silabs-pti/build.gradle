@@ -29,7 +29,11 @@ java {
   withJavadocJar()
   withSourcesJar()
   toolchain {
-    languageVersion = JavaLanguageVersion.of(11)
+    def requestedVersion = providers
+            .systemProperty("javaVersion")
+            .orElse(providers.environmentVariable("JAVA_VERSION"))
+            .orElse("11") // fallback if nothing set
+    languageVersion = JavaLanguageVersion.of(requestedVersion.get().toInteger())
   }   
 }
 
